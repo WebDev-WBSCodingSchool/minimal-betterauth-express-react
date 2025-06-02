@@ -1,34 +1,25 @@
 import { useEffect, useState } from 'react';
 import { createAuthClient } from 'better-auth/react';
 
-type User = {
-  name: string;
-  email: string;
-  image: string;
-};
-
 const { signIn, signUp, signOut, useSession } = createAuthClient({ baseURL: 'http://localhost:3000' });
 
+const handleSignIn = async () => {
+  try {
+    await signIn.social({
+      provider: 'google',
+      callbackURL: 'http://localhost:5173/', // target URL after successful signin
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 function App() {
-  const [user, setUser] = useState<null | User>(null);
   const [protectedData, setProtectedData] = useState<null | object>(null);
 
   const { data, error, isPending, refetch } = useSession();
-  useEffect(() => {}, []);
 
   console.log({ data, error, isPending });
-  const handleSignIn = async () => {
-    try {
-      const response = await signIn.social({
-        provider: 'google',
-        callbackURL: 'http://localhost:5173/',
-      });
-      refetch();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleSignOut = async () => {
     try {
@@ -44,10 +35,8 @@ function App() {
       const res = await fetch('http://localhost:3000/protected', {
         credentials: 'include',
       });
-      console.log('RES: ', res);
       if (res.redirected) window.location.href = res.url;
       const d = await res.json();
-      console.log('DATA: ', d);
       if (!res.ok) throw new Error('Fetching Data failed');
       if (!d) setProtectedData(null);
       else setProtectedData(d);
