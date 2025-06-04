@@ -2,8 +2,29 @@ import { useRef, type FormEvent } from 'react';
 import { NavLink } from 'react-router';
 import authClient from '../services/auth-client';
 
-const Navbar = ({ user, handleSignIn, handleSignOut, isPending }: NavbarProps) => {
+const { signUp, signIn, signOut } = authClient;
+
+const handleGoogleSignIn = async () => {
+  try {
+    await signIn.social({
+      provider: 'google',
+      callbackURL: 'http://localhost:5173/', // target URL after successful signin
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const Navbar = ({ user, isPending }: NavbarProps) => {
   const dialogRef = useRef<null | HTMLDialogElement>(null);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handlePWSignUp = async (e: FormEvent) => {
     e.preventDefault();
@@ -19,7 +40,7 @@ const Navbar = ({ user, handleSignIn, handleSignOut, isPending }: NavbarProps) =
     const password = passwordSu.value;
 
     try {
-      const { data, error } = await authClient.signUp.email(
+      const { data, error } = await signUp.email(
         { email, password, name },
         {
           onRequest: (ctx) => {
@@ -96,13 +117,16 @@ const Navbar = ({ user, handleSignIn, handleSignOut, isPending }: NavbarProps) =
           ref={dialogRef}
           className='p-5 rounded m-auto backdrop:backdrop-blur-xs relative  overflow-y-auto max-h-screen'
         >
+          {isPending && (
+            <div className='absolute inset-0 h-full w-full text-center content-center backdrop-blur'>Loading...</div>
+          )}
           <button
             className='absolute top-2 right-2 !rounded-full aspect-square'
             onClick={() => dialogRef.current?.close()}
           >
             ✖
           </button>
-          <button disabled={isPending} onClick={handleSignIn}>
+          <button disabled={isPending} onClick={handleGoogleSignIn}>
             Sign in with Google
           </button>
           <form className='my-2' onSubmit={handlePWSignUp}>
