@@ -14,8 +14,6 @@ declare global {
 
   type NavbarProps = {
     user: Session['user'] | undefined;
-    handleSignIn: () => Promise<void>;
-    handleSignOut: () => Promise<void>;
     isPending: boolean;
   };
 }
