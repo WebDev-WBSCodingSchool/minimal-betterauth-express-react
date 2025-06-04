@@ -16,5 +16,6 @@ declare global {
     user: Session['user'] | undefined;
     handleSignIn: () => Promise<void>;
     handleSignOut: () => Promise<void>;
+    isPending: boolean;
   };
 }

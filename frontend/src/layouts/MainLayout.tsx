@@ -29,7 +29,7 @@ const MainLayout = () => {
 
   return (
     <div className='w-screen h-screen'>
-      <Navbar user={data?.user} handleSignIn={handleSignIn} handleSignOut={handleSignOut} />
+      <Navbar user={data?.user} handleSignIn={handleSignIn} handleSignOut={handleSignOut} isPending={isPending} />
       <main>
         <Outlet context={{ data, isPending }} />
       </main>
