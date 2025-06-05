@@ -15,16 +15,16 @@ const handleGoogleSignIn = async () => {
   }
 };
 
+const handleSignOut = async () => {
+  try {
+    await signOut();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const Navbar = ({ user, isPending }: NavbarProps) => {
   const dialogRef = useRef<null | HTMLDialogElement>(null);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handlePWSignUp = async (e: FormEvent) => {
     e.preventDefault();

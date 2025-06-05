@@ -1,16 +1,24 @@
 // File required for auto generated db tables
 
 import { betterAuth } from 'better-auth';
-import { Pool } from 'pg';
+// import { Pool } from 'pg';
 
-const connectionString = process.env.PG_URI;
+import { MongoClient } from 'mongodb';
+import { mongodbAdapter } from 'better-auth/adapters/mongodb';
+
+// const connectionString = process.env.PG_URI;
+const connectionString = process.env.MONGO_URI;
 if (!connectionString) {
-  console.warn('Postgre Connection String missing');
+  console.warn('Database Connection String missing');
   process.exit(1);
 }
 
+const client = new MongoClient(connectionString);
+const db = client.db('betterauth');
+
 export const auth = betterAuth({
-  database: new Pool({ connectionString }),
+  // database: new Pool({ connectionString }),
+  database: mongodbAdapter(db),
   emailAndPassword: {
     enabled: true,
   },
