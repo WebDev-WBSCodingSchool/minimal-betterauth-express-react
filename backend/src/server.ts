@@ -7,11 +7,12 @@ import { auth } from './lib/auth.js';
 const app: Application = express();
 const port = process.env.PORT ?? 3000;
 
-const whitelist = ['http://localhost:5173'];
+const allowlist = ['http://localhost:5173'];
 const corsOptions = {
   credentials: true,
-  origin: whitelist,
+  origin: allowlist,
 };
+app.use(cors(corsOptions));
 
 export async function authenticatedUser(req: Request, res: Response, next: NextFunction) {
   const session = await auth.api.getSession({
@@ -25,8 +26,6 @@ export async function authenticatedUser(req: Request, res: Response, next: NextF
     next();
   }
 }
-
-app.use(cors(corsOptions));
 
 app.set('trust proxy', true);
 
